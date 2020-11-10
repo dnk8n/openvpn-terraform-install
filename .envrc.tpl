@@ -1,6 +1,6 @@
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
-export AWS_DEFAULT_REGION=us-east-2
+export AWS_DEFAULT_REGION=eu-west-2
 export TF_VAR_aws_region=eu-west-2
 export TF_VAR_shared_credentials_file
 export TF_VAR_profile=

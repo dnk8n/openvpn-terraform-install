@@ -33,3 +33,5 @@ settings/*
 
 # Ignore generated config
 generated/*
+
+.envrc

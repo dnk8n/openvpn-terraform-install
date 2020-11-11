@@ -75,7 +75,7 @@ resource "null_resource" "openvpn_bootstrap" {
 
 EOT
       ,
-      sudo chown -R openvpn:openvpn /etc/openvpn
+      "sudo chown -R openvpn:openvpn /etc/openvpn",
     ]
   }
 }

@@ -3,14 +3,6 @@ variable "aws_region" {
   default     = "eu-west-2"
 }
 
-variable "shared_credentials_file" {
-  description = "The location of the AWS shared credentials file (e.g. ~dominic/.aws/credentials)"
-}
-
-variable "profile" {
-  description = "The profile to use"
-}
-
 variable "tag_name" {
   description = "The name to tag AWS resources with"
   default     = "OpenVPN"

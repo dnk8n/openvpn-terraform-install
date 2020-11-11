@@ -26,7 +26,7 @@ data "aws_ami" "amazon_linux_2" {
 
 resource "aws_key_pair" "openvpn" {
   key_name   = var.ssh_private_key_file
-  public_key = file("${path.module}/${var.ssh_public_key_file}")
+  public_key = file("${var.ssh_public_key_file}")
 }
 
 resource "aws_instance" "openvpn" {
@@ -92,7 +92,7 @@ resource "null_resource" "openvpn_update_users_script" {
     host        = aws_instance.openvpn.public_ip
     user        = var.ec2_username
     port        = "22"
-    private_key = file("${path.module}/${var.ssh_private_key_file}")
+    private_key = file("${var.ssh_private_key_file}")
     agent       = false
   }
 

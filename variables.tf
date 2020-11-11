@@ -44,14 +44,3 @@ variable "ssh_private_key_file" {
   description = "The private SSH key used to connect to the EC2 instance"
   default     = "settings/openvpn"
 }
-
-variable "ovpn_users" {
-  type        = list(string)
-  description = "The list of users to automatically provision with OpenVPN access"
-}
-
-variable "ovpn_config_directory" {
-  description = "The name of the directory to eventually download the OVPN configuration files to"
-  default     = "generated/ovpn-config"
-}
-

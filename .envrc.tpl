@@ -1,14 +1,12 @@
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
-export AWS_DEFAULT_REGION=eu-west-2
-export TF_VAR_aws_region=eu-west-2
+export AWS_DEFAULT_REGION=af-south-1
+export TF_VAR_aws_region=af-south-1
 export TF_VAR_tag_name=OpenVPN
 export TF_VAR_cidr_block=10.0.0.0/16
-export TF_VAR_instance_type=t2.micro
+export TF_VAR_instance_type=t3.micro
 export TF_VAR_instance_root_block_device_volume_size=8
 export TF_VAR_ec2_username=ec2-user
 export TF_VAR_openvpn_install_script_location=https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
 export TF_VAR_ssh_public_key_file=${HOME}/.ssh/openvpn.pub
 export TF_VAR_ssh_private_key_file=${HOME}/.ssh/openvpn.pem
-export TF_VAR_ovpn_users=
-export TF_VAR_ovpn_config_directory=generated/ovpn-config

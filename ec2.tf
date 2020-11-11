@@ -70,61 +70,12 @@ resource "null_resource" "openvpn_bootstrap" {
       "chmod +x openvpn-install.sh",
       <<EOT
       sudo AUTO_INSTALL=y \
-           APPROVE_IP=${aws_instance.openvpn.public_ip} \
            ENDPOINT=${aws_instance.openvpn.public_dns} \
            ./openvpn-install.sh
-      
+
 EOT
       ,
+      sudo chown -R openvpn:openvpn /etc/openvpn
     ]
   }
 }
-
-resource "null_resource" "openvpn_update_users_script" {
-  depends_on = [null_resource.openvpn_bootstrap]
-
-  triggers = {
-    ovpn_users = join(" ", var.ovpn_users)
-  }
-
-  connection {
-    type        = "ssh"
-    host        = aws_instance.openvpn.public_ip
-    user        = var.ec2_username
-    port        = "22"
-    private_key = file(var.ssh_private_key_file)
-    agent       = false
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/scripts/update_users.sh"
-    destination = "/home/${var.ec2_username}/update_users.sh"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "chmod +x ~${var.ec2_username}/update_users.sh",
-      "sudo ~${var.ec2_username}/update_users.sh ${join(" ", var.ovpn_users)}",
-    ]
-  }
-}
-
-resource "null_resource" "openvpn_download_configurations" {
-  depends_on = [null_resource.openvpn_update_users_script]
-
-  triggers = {
-    ovpn_users = join(" ", var.ovpn_users)
-  }
-
-  provisioner "local-exec" {
-    command = <<EOT
-    mkdir -p ${var.ovpn_config_directory};
-    scp -o StrictHostKeyChecking=no \
-        -o UserKnownHostsFile=/dev/null \
-        -i ${var.ssh_private_key_file} ${var.ec2_username}@${aws_instance.openvpn.public_ip}:/home/${var.ec2_username}/*.ovpn ${var.ovpn_config_directory}/
-    
-EOT
-
-  }
-}
-

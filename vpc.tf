@@ -10,9 +10,10 @@ resource "aws_vpc" "openvpn" {
 }
 
 resource "aws_subnet" "openvpn" {
-  vpc_id     = aws_vpc.openvpn.id
-  cidr_block = cidrsubnet(var.cidr_block, 8, 0)
-
+  vpc_id                  = aws_vpc.openvpn.id
+  cidr_block              = cidrsubnet(var.cidr_block, 8, 0)
+  map_public_ip_on_launch = true
+  depends_on = [aws_internet_gateway.openvpn]
   tags = {
     Name        = var.tag_name
     Provisioner = "Terraform"

@@ -29,9 +29,17 @@ resource "aws_key_pair" "openvpn" {
   public_key = file(var.ssh_public_key_file)
 }
 
+resource "aws_eip" "openvpn" {
+  vpc                       = true
+  instance                  = aws_instance.openvpn.id
+  associate_with_private_ip = "10.0.0.12"
+  depends_on                = [aws_internet_gateway.openvpn]
+}
+
 resource "aws_instance" "openvpn" {
   ami                         = data.aws_ami.amazon_linux_2.id
-  associate_public_ip_address = true
+  associate_public_ip_address = false
+  private_ip                  = "10.0.0.12"
   instance_type               = var.instance_type
   key_name                    = aws_key_pair.openvpn.key_name
   subnet_id                   = aws_subnet.openvpn.id
@@ -56,21 +64,28 @@ resource "aws_instance" "openvpn" {
 resource "null_resource" "openvpn_bootstrap" {
   connection {
     type        = "ssh"
-    host        = aws_instance.openvpn.public_ip
+    host        = aws_eip.openvpn.public_ip
     user        = var.ec2_username
     port        = "22"
     private_key = file(var.ssh_private_key_file)
     agent       = false
   }
 
+  provisioner "file" {
+    source      = "configs/etc/openvpn/ccd"
+    destination = "/tmp"
+  }
+
   provisioner "remote-exec" {
     inline = [
+      "sudo mkdir -p /etc/openvpn/ccd",
+      "sudo mv /tmp/ccd /etc/openvpn",
       "sudo yum update -y",
       "curl -O ${var.openvpn_install_script_location}",
       "chmod +x openvpn-install.sh",
       <<EOT
       sudo AUTO_INSTALL=y \
-           ENDPOINT=${aws_instance.openvpn.public_dns} \
+           ENDPOINT=${aws_eip.openvpn.public_ip} \
            ./openvpn-install.sh
 
 EOT

@@ -38,7 +38,7 @@ resource "aws_eip" "openvpn" {
 
 resource "aws_instance" "openvpn" {
   ami                         = data.aws_ami.amazon_linux_2.id
-  associate_public_ip_address = false
+  associate_public_ip_address = true
   private_ip                  = "10.0.0.12"
   instance_type               = var.instance_type
   key_name                    = aws_key_pair.openvpn.key_name
